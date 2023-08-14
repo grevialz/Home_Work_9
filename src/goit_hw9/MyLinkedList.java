@@ -3,7 +3,8 @@ package goit_hw9;
 public class MyLinkedList<E> {
 
     private int size = 0;
-    private Node head = null;
+    private Node<E> head = null;
+    private Node<E> tail = null;
 
     private static class Node<E> {
         E value;
@@ -18,26 +19,25 @@ public class MyLinkedList<E> {
     }
 
     public void add(E value) {
-        if (head == null) {
-            head = new Node<>(value, null, null);
+        if (tail == null) {
+            head = tail = new Node<>(value, null, null);
         } else {
-            Node<E> node = head;
-            while (node.next != null) {
-                node = node.next;
-            }
-            node.next = new Node<>(value, node, null);
+            tail.next = new Node<>(value, tail, null);
+            tail = tail.next;
         }
         size++;
     }
 
-    public E remove(int index) {
+    private void checkIndex(int index) {
         if (index < 0 || index >= size) {
             throw new IndexOutOfBoundsException();
         }
-        Node<E> node = head;
-        for (int i = 0; i < index; i++) {
-            node = node.next;
-        }
+    }
+
+    public E remove(int index) {
+        checkIndex(index);
+        Node<E> node = getNodeAtIndex(index);
+
         if (node.prev == null) {
             head = node.next;
         } else {
@@ -51,7 +51,7 @@ public class MyLinkedList<E> {
     }
 
     public void clear() {
-        head = null;
+        head = tail = null;
         size = 0;
     }
 
@@ -60,13 +60,16 @@ public class MyLinkedList<E> {
     }
 
     public E get(int index) {
-        if (index < 0 || index >= size) {
-            throw new IndexOutOfBoundsException();
-        }
+        checkIndex(index);
+        Node<E> node = getNodeAtIndex(index);
+        return node.value;
+    }
+
+    private Node<E> getNodeAtIndex(int index) {
         Node<E> node = head;
         for (int i = 0; i < index; i++) {
             node = node.next;
         }
-        return node.value;
+        return node;
     }
 }
