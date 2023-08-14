@@ -1,4 +1,4 @@
-package java.goit.hw9;
+package goit_hw9;
 
 public class MyHashMap<K, V> {
 
@@ -6,21 +6,21 @@ public class MyHashMap<K, V> {
     private int capacity;
     private int size;
     private static final float LOAD_FACTOR = 0.75f;
+    private static final int DEFAULT_CAPACITY = 16;
 
     public MyHashMap() {
-        this(16);
+        this(DEFAULT_CAPACITY);
     }
 
     public MyHashMap(int capacity) {
+        if (capacity <= 0) {
+            throw new IllegalArgumentException("Capacity must be positive");
+        }
         this.capacity = capacity;
         table = new Node[capacity];
     }
 
     public void put(K key, V value) {
-        if (key == null) {
-            throw new IllegalArgumentException("Key cannot be null");
-        }
-
         if (size >= LOAD_FACTOR * capacity) {
             resize();
         }
@@ -113,7 +113,11 @@ public class MyHashMap<K, V> {
     }
 
     private int hash(K key) {
-        return Math.abs(key.hashCode() % capacity);
+        if (key == null) {
+            return 0;
+        } else {
+            return Math.abs(key.hashCode() % capacity);
+        }
     }
 
     private static class Node<K, V> {

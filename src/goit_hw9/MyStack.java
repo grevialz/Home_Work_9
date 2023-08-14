@@ -1,4 +1,4 @@
-package java.goit.hw9;
+package goit_hw9;
 
 import java.util.NoSuchElementException;
 
